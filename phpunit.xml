@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
+         bootstrap="vendor/autoload.php"
+         colors="true"
+>
+    <testsuites>
+        <testsuite name="Unit">
+            <directory>tests/Unit</directory>
+        </testsuite>
+        <testsuite name="Feature">
+            <directory>tests/Feature</directory>
+        </testsuite>
+    </testsuites>
+    <source>
+        <include>
+            <directory>app</directory>
+        </include>
+    </source>
+    <php>
+        <env name="APP_ENV" value="testing"/>
+        <env name="APP_MAINTENANCE_DRIVER" value="file"/>
+        <env name="BCRYPT_ROUNDS" value="4"/>
+        <env name="BROADCAST_CONNECTION" value="null"/>
+        <env name="CACHE_STORE" value="array"/>
+        <!--
+            MySQL, not sqlite in-memory.
+
+            44 of this project's migrations use raw MySQL DDL (MODIFY COLUMN …
+            ENUM(…), ALTER TABLE), which sqlite cannot run at all — so the
+            in-memory database could never be migrated and no test could touch
+            a table. movent_test is a throwaway schema alongside the dev one.
+
+            Set it up once (it is NOT created automatically, and the full
+            migration run takes several minutes): create a database named
+            movent_test with utf8mb4 / utf8mb4_unicode_ci, then run
+            artisan migrate against it with DB_DATABASE=movent_test.
+
+            Tests that hit the database use DatabaseTransactions (not
+            RefreshDatabase) and roll back, so the schema is migrated once and
+            reused. Nothing here ever points at the development database.
+        -->
+        <env name="DB_CONNECTION" value="mysql"/>
+        <env name="DB_DATABASE" value="movent_test"/>
+        <env name="DB_URL" value=""/>
+        <env name="MAIL_MAILER" value="array"/>
+        <env name="QUEUE_CONNECTION" value="sync"/>
+        <env name="SESSION_DRIVER" value="array"/>
+        <env name="PULSE_ENABLED" value="false"/>
+        <env name="TELESCOPE_ENABLED" value="false"/>
+        <env name="NIGHTWATCH_ENABLED" value="false"/>
+    </php>
+</phpunit>

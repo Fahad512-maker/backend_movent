@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  body { font-family: Arial, sans-serif; background: #f8fafc; margin: 0; padding: 20px; }
+  .container { max-width: 580px; margin: 0 auto; background: #fff; border-radius: 12px; padding: 40px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
+  .logo { font-size: 22px; font-weight: 800; color: #2563eb; margin-bottom: 24px; }
+  h1 { font-size: 22px; color: #0f172a; margin: 0 0 8px; }
+  p { color: #475569; line-height: 1.6; margin: 0 0 14px; }
+  .badge { display: inline-block; padding: 4px 14px; border-radius: 20px; font-size: 12px; font-weight: 700; background: #ede9fe; color: #5b21b6; margin-bottom: 20px; }
+  .project-title { font-size: 17px; font-weight: 700; color: #0f172a; margin: 0 0 16px; }
+  .receipt-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 20px 24px; margin: 20px 0; }
+  .receipt-box table { width: 100%; border-collapse: collapse; }
+  .receipt-box td { padding: 6px 0; font-size: 14px; color: #475569; vertical-align: top; }
+  .receipt-box td:last-child { text-align: right; font-weight: 600; color: #0f172a; }
+  .btn { display: inline-block; padding: 14px 32px; background: #2563eb; color: #fff !important; text-decoration: none; border-radius: 9px; font-weight: 700; font-size: 15px; margin: 8px 0 20px; }
+  .link-box { background: #f1f5f9; border-radius: 8px; padding: 12px 16px; margin: 16px 0; font-size: 12px; color: #64748b; word-break: break-all; }
+  .footer { margin-top: 32px; padding-top: 20px; border-top: 1px solid #f1f5f9; font-size: 12px; color: #94a3b8; }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="logo">{{ $companyName }}</div>
+  <span class="badge">🗂️ Project Manager Assignment</span>
+  <h1>You're managing a new project</h1>
+
+  <p>Hi {{ $recipientName }}, {{ $assignedByName ? $assignedByName . ' assigned you' : 'you have been assigned' }} as <strong>Project Manager</strong> for the project below.</p>
+
+  <div class="project-title">{{ $projectName }}</div>
+
+  <div class="receipt-box">
+    <table>
+      @if($reference)
+      <tr>
+        <td>Reference</td>
+        <td>{{ $reference }}</td>
+      </tr>
+      @endif
+      <tr>
+        <td>Status</td>
+        <td>{{ $status }}</td>
+      </tr>
+      <tr>
+        <td>Priority</td>
+        <td>{{ $priority }}</td>
+      </tr>
+      @if($startDate)
+      <tr>
+        <td>Start date</td>
+        <td>{{ $startDate }}</td>
+      </tr>
+      @endif
+      @if($deadline)
+      <tr>
+        <td>Deadline</td>
+        <td>{{ $deadline }}</td>
+      </tr>
+      @endif
+      @if($description)
+      <tr>
+        <td>Details</td>
+        {{-- Markup-formatted, escaped by MarkupText::toHtml() — see the
+             matching note in emails/task_assigned.blade.php. --}}
+        <td>{!! \App\Support\MarkupText::toHtml($description) !!}</td>
+      </tr>
+      @endif
+    </table>
+  </div>
+
+  <a href="{{ $projectUrl }}" class="btn">Open Project →</a>
+  <div class="link-box">
+    Or copy this link: {{ $projectUrl }}
+  </div>
+
+  <p style="font-size:13px; color:#64748b;">You'll need to be signed in to your {{ $companyName }} dashboard to open it.</p>
+
+  <div class="footer">
+    This is an automated message from {{ $companyName }}.
+  </div>
+</div>
+</body>
+</html>

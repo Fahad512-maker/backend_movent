@@ -1,0 +1,51 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
+
+// Project Managers can fully update task status, including Done/Completed,
+// reopen, and override transitions. Backfill existing PM users to match the
+// role defaults used for newly created PM accounts.
+return new class extends Migration
+{
+    public function up(): void
+    {
+        if (!Schema::hasTable('users') || !Schema::hasTable('user_company_permissions')) {
+            return;
+        }
+
+        $now = now();
+        $permKeys = [
+            'canCompleteTasks',
+            'canReopenTasks',
+            'canOverrideTaskStatus',
+            'canAssignProductionTasks',
+            'canMarkTaskBlocked',
+        ];
+        $rows = [];
+
+        $pms = DB::table('users')->where('role_type', 'project_manager')->get(['id', 'company_id']);
+        foreach ($pms as $user) {
+            foreach ($permKeys as $permKey) {
+                $rows[] = [
+                    'user_id'        => $user->id,
+                    'company_id'     => $user->company_id,
+                    'module_key'     => 'project_management',
+                    'permission_key' => $permKey,
+                    'created_at'     => $now,
+                    'updated_at'     => $now,
+                ];
+            }
+        }
+
+        if (!empty($rows)) {
+            DB::table('user_company_permissions')->insertOrIgnore($rows);
+        }
+    }
+
+    public function down(): void
+    {
+        // Intentionally irreversible; these are PM defaults.
+    }
+};
