@@ -30,7 +30,7 @@ return new class extends Migration
             $table->unsignedInteger('grace_period_days')->default(3);
             // Days-before-expiry thresholds a renewal/trial-ending reminder
             // fires on, e.g. [7,3,1].
-            $table->json('renewal_reminder_days')->default(json_encode([7, 3, 1]));
+            $table->json('renewal_reminder_days')->nullable();
             $table->boolean('auto_suspend_on_trial_expiry')->default(true);
             $table->boolean('auto_suspend_on_renewal_failure')->default(true);
             // 'grace_period' = land in grace_period status first (own knob
