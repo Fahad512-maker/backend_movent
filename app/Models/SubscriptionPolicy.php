@@ -21,6 +21,14 @@ class SubscriptionPolicy extends Model
         'payment_policy_notes', 'updated_by_super_admin_id',
     ];
 
+    // The reminder cadence used to be a column default, but MySQL rejects a
+    // literal DEFAULT on a json column, so the migration leaves it nullable
+    // and the default lives here instead — current() still hands back
+    // [7,3,1] for a fresh install.
+    protected $attributes = [
+        'renewal_reminder_days' => '[7,3,1]',
+    ];
+
     protected $casts = [
         'trial_enabled' => 'boolean',
         'trial_duration_days' => 'integer',

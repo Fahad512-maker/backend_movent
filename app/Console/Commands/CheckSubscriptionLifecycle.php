@@ -138,7 +138,9 @@ class CheckSubscriptionLifecycle extends Command
     {
         $count = 0;
 
-        foreach ($policy->renewal_reminder_days as $days) {
+        // ?? [] covers rows written while the column was nullable with no
+        // model-level default — see SubscriptionPolicy::$attributes.
+        foreach ($policy->renewal_reminder_days ?? [] as $days) {
             $days = (int) $days;
             if ($days <= 0) continue;
             $type = "trial_ending_soon_{$days}d";
@@ -165,7 +167,9 @@ class CheckSubscriptionLifecycle extends Command
     {
         $count = 0;
 
-        foreach ($policy->renewal_reminder_days as $days) {
+        // ?? [] covers rows written while the column was nullable with no
+        // model-level default — see SubscriptionPolicy::$attributes.
+        foreach ($policy->renewal_reminder_days ?? [] as $days) {
             $days = (int) $days;
             if ($days <= 0) continue;
             $type = "renewal_due_{$days}d";
